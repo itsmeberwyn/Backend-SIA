@@ -63,17 +63,17 @@ Create database and import MySQL database
 How to:
 
 ```bash
-Go to the file directory and create an .env file in the root folder
+  Go to the file directory and create an .env file in the root folder
 ```
 
 ```bash
-place the following inside the .env file and be sure to put the database name in __DBASE_
+  Place the following inside the .env file and be sure to put the database name in __DBASE_
 
-__DBASE_=sia_project_db #example name sia_project_db
-__USER_=root
-__PASSWORD_=
-__SERVER_=localhost
-__CHARSET_=utf8mb4
+  __DBASE_=sia_project_db #example name sia_project_db
+  __USER_=root
+  __PASSWORD_=
+  __SERVER_=localhost
+  __CHARSET_=utf8mb4
 ```
 
 
