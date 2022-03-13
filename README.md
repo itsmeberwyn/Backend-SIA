@@ -16,7 +16,6 @@ A system keeping an eye on stock count, and on transactions; it also stores the 
 - [@John Romeo Perez](https://github.com/luci-000)
 - [@Melmark Dela Cruz](https://github.com/luci-000)
 - [@Melmark Dela Cruz](https://github.com/luci-000)
-- [@Melmark Dela Cruz](https://github.com/luci-000)
 
 ## Run Locally
 
@@ -53,6 +52,7 @@ Clone the project
 ```bash
   https://github.com/FelismeniaBerwyn/Backend-SIA.git
 ```
+
 Create database and import MySQL database
 
 ```bash
@@ -75,6 +75,3 @@ How to:
   __SERVER_=localhost
   __CHARSET_=utf8mb4
 ```
-
-
-
