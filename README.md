@@ -62,4 +62,61 @@ Clone the project
   Start XAMPP to run the server
 ```
 
+#### REST API
 
+Use plural form for the resource names
+
+```bash
+/users, /users/{id}
+```
+
+Use camelCase for the method names
+
+```bash
+getUser(){
+  return users();
+}
+```
+
+Use self-explanatory, simple names
+
+```bash
+$users
+
+/users, /users/{id}
+
+{
+  "email":"kamotee@gmail.com",
+  "username":"kamotee",
+}
+```
+
+Use reasonable HTTP status codes
+
+```bash
+• 200 for general success
+• 201 for successful creation
+• 400 for bad requests from the client
+• 401 for unauthorized requests
+• 403 for missing permissions
+• 404 for missing resources
+• 429 for too many requests
+• 5xx for internal errors (these should be avoided at all costs)
+```
+
+Return created resources upon POST
+
+```bash
+Request: POST
+{
+  "email":"kamotee@gmail.com",
+  "username":"kamotee",
+}
+
+Response
+{
+  "id": "123",
+  "email":"kamotee@gmail.com",
+  "username":"kamotee",
+}
+```
