@@ -4,12 +4,16 @@ require_once("./modules/Procedural.php");
 require_once("./modules/Global.php");
 require_once("./modules/Get.php");
 require_once("./modules/Post.php");
+require_once("./modules/Patch.php");
+require_once("./modules/Remove.php");
 
 
 $db = new Connection();
 $pdo = $db->connect();
 $get = new Get($pdo);
 $post = new Post($pdo);
+$patch = new Patch($pdo);
+$remove = new Remove($pdo);
 
 
 if (isset($_REQUEST['request'])) {
@@ -32,6 +36,20 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 break;
             case 'posttesting':
                 echo json_encode($post->testPost($d));
+                break;
+
+                // news CRUD
+            case 'createnews':
+                echo json_encode($post->createPost($d));
+                break;
+            case 'getnews':
+                echo json_encode($get->getNews());
+                break;
+            case 'updatenews':
+                echo json_encode($patch->updateNews($d));
+                break;
+            case 'removenews':
+                echo json_encode($remove->removeNews($d));
                 break;
             default:
                 echo errmsg(400);
