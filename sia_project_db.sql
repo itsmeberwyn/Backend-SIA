@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 10, 2022 at 04:50 PM
+-- Generation Time: Apr 08, 2022 at 06:37 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.26
 
@@ -85,6 +85,15 @@ CREATE TABLE `news_details_table` (
   `news_details_created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `news_details_table`
+--
+
+INSERT INTO `news_details_table` (`news_details_id`, `news_id_n`, `news_details_image`, `news_details_organizer`, `news_details_type`, `news_details_category`, `news_details_created_at`) VALUES
+(1, 8, 'myface.png', 'MF.org', 'type sample', 'category sample', '2022-04-08 15:23:07'),
+(2, 9, 'myface2.png', 'MF2.org', 'type sample 2', 'category sample 2', '2022-04-08 16:20:06'),
+(5, 12, 'myface3.png', 'MF3.org', 'type sample3', 'category sample3', '2022-04-08 16:33:56');
+
 -- --------------------------------------------------------
 
 --
@@ -96,6 +105,15 @@ CREATE TABLE `news_table` (
   `news_title` text NOT NULL,
   `news_description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `news_table`
+--
+
+INSERT INTO `news_table` (`news_id`, `news_title`, `news_description`) VALUES
+(8, 'first news', 'this is all about cramming'),
+(9, 'second news', 'this is all about cramming part 2'),
+(12, 'fourth news', 'this is all about cramming part 3');
 
 -- --------------------------------------------------------
 
@@ -207,13 +225,13 @@ ALTER TABLE `event_details_table`
 -- AUTO_INCREMENT for table `news_details_table`
 --
 ALTER TABLE `news_details_table`
-  MODIFY `news_details_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `news_details_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `news_table`
 --
 ALTER TABLE `news_table`
-  MODIFY `news_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `news_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `registration_table`
@@ -235,13 +253,13 @@ ALTER TABLE `users_table`
 -- Constraints for table `event_details_table`
 --
 ALTER TABLE `event_details_table`
-  ADD CONSTRAINT `events_tbl_foreign_key_e` FOREIGN KEY (`event_id_e`) REFERENCES `events_table` (`event_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `events_tbl_foreign_key_e` FOREIGN KEY (`event_id_e`) REFERENCES `events_table` (`event_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `news_details_table`
 --
 ALTER TABLE `news_details_table`
-  ADD CONSTRAINT `news_tbl_foreign_key_n` FOREIGN KEY (`news_id_n`) REFERENCES `news_table` (`news_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `news_tbl_foreign_key_n` FOREIGN KEY (`news_id_n`) REFERENCES `news_table` (`news_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `registration_table`
