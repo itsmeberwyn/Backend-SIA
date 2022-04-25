@@ -9,6 +9,41 @@ class Patch
         $this->pdo = $pdo;
     }
 
+    public function updateEvent($data)
+    {
+        $payload = [];
+        $code = 404;
+        $remarks = "failed";
+        $message = "Unable to update data";
+
+        $eventInfo = $data->event_info;
+        $eventDetails = $data->event_detail;
+
+        try {
+            $this->pdo->beginTransaction();
+
+            $updateEventSQL = "UPDATE events_table SET event_title=?, event_description=?, event_location=?, event_capacity=? WHERE event_id=?";
+            $updateEventSQL = $this->pdo->prepare($updateEventSQL);
+            $updateEventSQL->execute([$eventInfo->event_title, $eventInfo->event_description, $eventInfo->event_location, $eventInfo->event_capacity, $eventInfo->event_id]);
+
+            $updateEventSQL = "UPDATE event_details_table SET event_detail_image=?, event_detail_organizer=?, event_detail_type=?, event_detail_category=? WHERE event_id_e=?";
+            $updateEventSQL = $this->pdo->prepare($updateEventSQL);
+            $updateEventSQL->execute([$eventDetails->event_detail_image, $eventDetails->event_detail_organizer, $eventDetails->event_detail_type, $eventDetails->event_detail_category, $eventInfo->event_id]);
+
+            $this->pdo->commit();
+
+            $code = 200;
+            $remarks = "success";
+            $message = "Successfully created";
+            return $this->gm->response($payload, $remarks, $message, $code);
+        } catch (\PDOException $e) {
+            $this->pdo->rollback();
+            throw $e;
+        }
+
+        return $this->gm->response($payload, $remarks, $message, $code);
+    }
+
     public function updateNews($data)
     {
         $payload = [];

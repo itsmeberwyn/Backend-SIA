@@ -40,7 +40,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
                 // news CRUD
             case 'createnews':
-                echo json_encode($post->createPost($d));
+                echo json_encode($post->createNews($d));
                 break;
             case 'getnews':
                 echo json_encode($get->getNews());
@@ -51,6 +51,43 @@ switch ($_SERVER['REQUEST_METHOD']) {
             case 'removenews':
                 echo json_encode($remove->removeNews($d));
                 break;
+
+                //create events
+            case 'createevent':
+                echo json_encode($post->createEvent($d));
+                break;
+            case 'getevent':
+                echo json_encode($get->getEvent());
+                break;
+            case 'updateevent':
+                echo json_encode($patch->updateEvent($d));
+                break;
+            case 'removeevent':
+                echo json_encode($remove->removeNews($d));
+                break;
+
+                //client Login 
+            case 'admin-register':
+                echo json_encode($post->adminRegister($d));
+                break;
+            case 'admin-login':
+                echo json_encode($post->adminLogin($d));
+                break;
+
+                //Profile 
+            case 'clientProfile':
+                echo json_encode($post->clientProfile($d));
+                break;
+            case 'adminProfile':
+                echo json_encode($post->adminProfile($d));
+                break;
+            case 'clientEventHistory':
+                echo json_encode($post->clientEventHistory($d));
+                break;
+            case 'adminEventHistory':
+                echo json_encode($get->adminEventHistory($d));
+                break;
+
             default:
                 echo errmsg(400);
                 break;

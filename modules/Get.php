@@ -39,4 +39,51 @@ class Get
             return $this->gm->response($payload, $remarks, $message, $code);
         }
     }
+
+    //Romeo    
+    public function getEvent()
+    {
+        $payload = [];
+        $code = 404;
+        $remarks = "failed";
+        $message = "Unable to save data";
+
+        try {
+            $sql = "SELECT * FROM event_table, event_details_table WHERE event_table.event_id = event_details_table.event_id_e";
+            $res = $this->gm->retrieve($sql);
+            if ($res['code'] == 200) {
+                $payload = $res['data'];
+                $code = 200;
+                $remarks = "success";
+                $message = "Successfully retrieved requested records";
+            }
+            return $this->gm->response($payload, $remarks, $message, $code);
+        } catch (\PDOException $e) {
+            return $this->gm->response($payload, $remarks, $message, $code);
+        }
+    }
+
+    public function adminEventHistory()
+    {
+
+        $payload = [];
+        $code = 404;
+        $remarks = "failed";
+        $message = "Unable to save data";
+
+        try {
+            $sql = "SELECT * FROM events_table ";
+            $res = $this->gm->retrieve($sql);
+
+            if ($res['code'] == 200) {
+                $payload = $res['data'];
+                $code = 200;
+                $remarks = "success";
+                $message = "Successfully retrieved requested records";
+            }
+            return $this->gm->response($payload, $remarks, $message, $code);
+        } catch (\PDOException $e) {
+            return $this->gm->response($payload, $remarks, $message, $code);
+        }
+    }
 }
