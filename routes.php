@@ -40,7 +40,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
                 // news CRUD
             case 'createnews':
-                echo json_encode($post->createNews($d));
+                echo json_encode($post->createNews($_POST));
                 break;
             case 'getnews':
                 echo json_encode($get->getNews());

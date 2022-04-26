@@ -21,9 +21,11 @@ class Post
         $remarks = "failed";
         $message = "Unable to save data";
 
-        $newsInfo = $data->news_info;
-        $newsDetails = $data->news_details;
+        $newsInfo = json_decode($data['news_info']);
+        $newsDetails = json_decode($data['news_details']);
 
+        $imageInfo = $this->gm->uploadImage('news', $_FILES);
+        $newsDetails->news_details_image = $imageInfo['filename'];
 
         try {
             $this->pdo->beginTransaction();
@@ -46,6 +48,7 @@ class Post
             $message = "Successfully created";
             return $this->gm->response($payload, $remarks, $message, $code);
         } catch (\PDOException $e) {
+            unlink($imageInfo['targetpath']);
             $this->pdo->rollback();
             throw $e;
         }
