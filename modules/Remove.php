@@ -16,21 +16,15 @@ class Remove
         $remarks = "failed";
         $message = "Unable to delete data";
 
-        try {
-            $this->pdo->beginTransaction();
 
-            $removeNewsSQL = "DELETE FROM news_table WHERE news_id=?";
-            $removeNewsSQL = $this->pdo->prepare($removeNewsSQL);
-            $removeNewsSQL->execute([$data->news_id]);
+        $removeNewsSQL = "UPDATE news_details_table SET deleted_at=NOW() WHERE news_id_n=?";
+        $removeNewsSQL = $this->pdo->prepare($removeNewsSQL);
+        $removeNewsSQL->execute([$data->news_id]);
 
-            $this->pdo->commit();
+        $code = 200;
+        $remarks = "success";
+        $message = "Successfully deleted";
 
-            $code = 200;
-            $remarks = "success";
-            $message = "Successfully deleted";
-            return $this->gm->response($payload, $remarks, $message, $code);
-        } catch (\PDOException $e) {
-        }
         return $this->gm->response($payload, $remarks, $message, $code);
     }
 }

@@ -12,7 +12,8 @@ class GlobalMethods
     {
         // return ['data' => $dir, 'file' => $file];
 
-        if ($file) {
+        if (sizeof($file) != 0) {
+
             $target_dir = 'upload/' . $dir . '/';
 
             $imageFileType = strtolower(pathinfo($file['image']['name'], PATHINFO_EXTENSION));

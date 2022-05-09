@@ -19,10 +19,10 @@ class Get
         $payload = [];
         $code = 404;
         $remarks = "failed";
-        $message = "Unable to save data";
+        $message = "Unable to fetch data";
 
         try {
-            $sql = "SELECT * FROM news_table, news_details_table WHERE news_table.news_id = news_details_table.news_id_n";
+            $sql = "SELECT * FROM news_table, news_details_table WHERE news_table.news_id = news_details_table.news_id_n AND news_details_table.deleted_at IS NULL";
             $res = $this->gm->retrieve($sql);
 
             // return $res['data'];

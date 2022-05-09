@@ -42,11 +42,13 @@ switch ($_SERVER['REQUEST_METHOD']) {
             case 'createnews':
                 echo json_encode($post->createNews($_POST));
                 break;
+
             case 'getnews':
                 echo json_encode($get->getNews());
                 break;
+
             case 'updatenews':
-                echo json_encode($patch->updateNews($d));
+                echo json_encode($patch->updateNews($_POST));
                 break;
             case 'removenews':
                 echo json_encode($remove->removeNews($d));

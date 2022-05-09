@@ -24,8 +24,14 @@ class Post
         $newsInfo = json_decode($data['news_info']);
         $newsDetails = json_decode($data['news_details']);
 
+
         $imageInfo = $this->gm->uploadImage('news', $_FILES);
-        $newsDetails->news_details_image = $imageInfo['filename'];
+
+        if ($imageInfo['status'] == 'success') {
+            $newsDetails->news_details_image = $imageInfo['filename'];
+        }
+
+        // return ['news_info' => $newsInfo, 'news_details' => $newsDetails];
 
         try {
             $this->pdo->beginTransaction();
@@ -39,7 +45,7 @@ class Post
             $newsDetailSQL = $this->pdo->prepare($newsDetailSQL);
             $newsDetailSQL->execute([$LAST_ID, $newsDetails->news_details_image, $newsDetails->news_details_organizer, $newsDetails->news_details_type, $newsDetails->news_details_category]);
 
-            $payload = $LAST_ID;
+            $payload = ['newsInfo' => $newsInfo, 'newsDetails' => $newsDetails];
 
             $this->pdo->commit();
 
