@@ -56,16 +56,22 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
                 //create events
             case 'createevent':
-                echo json_encode($post->createEvent($d));
+                echo json_encode($post->createEvent($_POST));
                 break;
             case 'getevent':
                 echo json_encode($get->getEvent());
                 break;
             case 'updateevent':
-                echo json_encode($patch->updateEvent($d));
+                echo json_encode($patch->updateEvent($_POST));
                 break;
             case 'removeevent':
-                echo json_encode($remove->removeNews($d));
+                echo json_encode($remove->removeEvent($d));
+                break;
+            case 'joinevent':
+                echo json_encode($get->getUserEvent($d));
+                break;
+            case 'cancelregistration':
+                echo json_encode($remove->cancelRegistration($d));
                 break;
 
                 //client Login 

@@ -16,8 +16,14 @@ class Patch
         $remarks = "failed";
         $message = "Unable to update data";
 
-        $eventInfo = $data->event_info;
-        $eventDetails = $data->event_detail;
+        $eventInfo = json_decode($data['event_info']);
+        $eventDetails = json_decode($data['event_details']);
+
+        $imageInfo = $this->gm->uploadImage('event', $_FILES);
+
+        if ($imageInfo['status'] == 'success') {
+            $eventDetails->event_detail_image = $imageInfo['filename'];
+        }
 
         try {
             $this->pdo->beginTransaction();

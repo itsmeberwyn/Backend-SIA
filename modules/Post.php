@@ -123,12 +123,26 @@ class Post
     }
 
     //romeo part
-    public function joinEvent()
+    public function joinEvent($data)
     {
         $payload = [];
         $code = 404;
         $remarks = "failed";
         $message = "Unable to save data";
+
+        try {
+
+            $joinInfoSQL = "INSERT INTO registration_table(event_id_r, user_studnum_r) VALUES (?, ?)";
+            $joinStudentSQL = $this->pdo->prepare($joinInfoSQL);
+            $joinStudentSQL->execute([$data->event_id, $data->student_num]);
+
+            $code = 200;
+            $remarks = "success";
+            $message = "Successfully created";
+            return $this->gm->response($payload, $remarks, $message, $code);
+        } catch (\PDOException $e) {
+            return $this->gm->response($payload, $remarks, $message, $code);
+        }
     }
 
 
@@ -139,17 +153,23 @@ class Post
         $remarks = "failed";
         $message = "Unable to save data";
 
-        $eventInfo = $data->event_info;
-        $eventDetails = $data->event_detail;
+        $eventInfo = json_decode($data['event_info']);
+        $eventDetails = json_decode($data['event_details']);
+
+        $imageInfo = $this->gm->uploadImage('event', $_FILES);
+
+        if ($imageInfo['status'] == 'success') {
+            $eventDetails->event_detail_image = $imageInfo['filename'];
+        }
 
         try {
             $this->pdo->beginTransaction();
-            $eventInfoSQL = "INSERT INTO events_table(event_title, event_description, event_location) VALUES (?, ?, ?)";
+            $eventInfoSQL = "INSERT INTO events_table(event_title, event_description, event_location, event_capacity) VALUES (?, ?, ?, ?)";
             $studentsSQL = $this->pdo->prepare($eventInfoSQL);
-            $studentsSQL->execute([$eventInfo->event_title, $eventInfo->event_description, $eventInfo->event_location]);
+            $studentsSQL->execute([$eventInfo->event_title, $eventInfo->event_description, $eventInfo->event_location, $eventInfo->event_capacity]);
             $LAST_ID = $this->pdo->lastInsertId();
 
-            $eventDetailSql = "INSERT INTO events_details_table(event_id_e, event_detail_image, event_detail_organizer, event_detail_type, event_detail_category) VALUES (?, ?, ?, ?, ?)";
+            $eventDetailSql = "INSERT INTO event_details_table(event_id_e, event_detail_image, event_detail_organizer, event_detail_type, event_detail_category) VALUES (?, ?, ?, ?, ?)";
             $eventDetailSql = $this->pdo->prepare($eventDetailSql);
             $eventDetailSql->execute([$LAST_ID, $eventDetails->event_detail_image, $eventDetails->event_detail_organizer, $eventDetails->event_detail_type, $eventDetails->event_detail_category]);
 
