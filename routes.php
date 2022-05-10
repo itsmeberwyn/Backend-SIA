@@ -68,6 +68,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($remove->removeEvent($d));
                 break;
             case 'joinevent':
+                echo json_encode($post->joinEvent($d));
+                break;
+            case 'userevent':
                 echo json_encode($get->getUserEvent($d));
                 break;
             case 'cancelregistration':

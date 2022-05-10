@@ -130,11 +130,24 @@ class Post
         $remarks = "failed";
         $message = "Unable to save data";
 
-        try {
+        $sql = "SELECT * FROM registration_table WHERE event_id_r = ? AND user_studnum_r = ?";
+        $sql = $this->pdo->prepare($sql);
+        $sql->execute([
+            $data->event_id,
+            $data->student_num,
+        ]);
+        $count = $sql->rowCount();
 
-            $joinInfoSQL = "INSERT INTO registration_table(event_id_r, user_studnum_r) VALUES (?, ?)";
-            $joinStudentSQL = $this->pdo->prepare($joinInfoSQL);
-            $joinStudentSQL->execute([$data->event_id, $data->student_num]);
+        try {
+            if (!$count) {
+                $joinInfoSQL = "INSERT INTO registration_table(event_id_r, user_studnum_r) VALUES (?, ?)";
+                $joinStudentSQL = $this->pdo->prepare($joinInfoSQL);
+                $joinStudentSQL->execute([$data->event_id, $data->student_num]);
+            } else {
+                $joinInfoSQL = "UPDATE registration_table SET cancelled_at=NULL WHERE event_id_r=? AND user_studnum_r=?";
+                $joinStudentSQL = $this->pdo->prepare($joinInfoSQL);
+                $joinStudentSQL->execute([$data->event_id, $data->student_num]);
+            }
 
             $code = 200;
             $remarks = "success";
