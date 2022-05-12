@@ -26,18 +26,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
     case 'POST':
         $d = json_decode(file_get_contents("php://input"));
         switch ($req[0]) {
-            case 'gettesting':
-                if (sizeof($req) > 1) {
-                    // http://localhost/backend-sia/testing/test
-                    echo json_encode($get->testGet($req[1]));
-                } else {
-                    echo json_encode($get->testGet(null));
-                }
-                break;
-            case 'posttesting':
-                echo json_encode($post->testPost($d));
-                break;
-
                 // news CRUD
             case 'createnews':
                 echo json_encode($post->createNews($_POST));

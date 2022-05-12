@@ -28,9 +28,9 @@ class Patch
         try {
             $this->pdo->beginTransaction();
 
-            $updateEventSQL = "UPDATE events_table SET event_title=?, event_description=?, event_location=?, event_capacity=? WHERE event_id=?";
+            $updateEventSQL = "UPDATE events_table SET event_title=?, event_description=?, event_location=?, event_capacity=?, event_startdatetime=?, event_enddatetime=? WHERE event_id=?";
             $updateEventSQL = $this->pdo->prepare($updateEventSQL);
-            $updateEventSQL->execute([$eventInfo->event_title, $eventInfo->event_description, $eventInfo->event_location, $eventInfo->event_capacity, $eventInfo->event_id]);
+            $updateEventSQL->execute([$eventInfo->event_title, $eventInfo->event_description, $eventInfo->event_location, $eventInfo->event_capacity, $eventInfo->event_startdatetime, $eventInfo->event_enddatetime, $eventInfo->event_id]);
 
             $updateEventSQL = "UPDATE event_details_table SET event_detail_image=?, event_detail_organizer=?, event_detail_type=?, event_detail_category=? WHERE event_id_e=?";
             $updateEventSQL = $this->pdo->prepare($updateEventSQL);

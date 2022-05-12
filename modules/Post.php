@@ -177,9 +177,9 @@ class Post
 
         try {
             $this->pdo->beginTransaction();
-            $eventInfoSQL = "INSERT INTO events_table(event_title, event_description, event_location, event_capacity) VALUES (?, ?, ?, ?)";
+            $eventInfoSQL = "INSERT INTO events_table(event_title, event_description, event_location, event_capacity, event_startdatetime, event_enddatetime) VALUES (?, ?, ?, ?, ?, ?)";
             $studentsSQL = $this->pdo->prepare($eventInfoSQL);
-            $studentsSQL->execute([$eventInfo->event_title, $eventInfo->event_description, $eventInfo->event_location, $eventInfo->event_capacity]);
+            $studentsSQL->execute([$eventInfo->event_title, $eventInfo->event_description, $eventInfo->event_location, $eventInfo->event_capacity, $eventInfo->event_startdatetime, $eventInfo->event_enddatetime]);
             $LAST_ID = $this->pdo->lastInsertId();
 
             $eventDetailSql = "INSERT INTO event_details_table(event_id_e, event_detail_image, event_detail_organizer, event_detail_type, event_detail_category) VALUES (?, ?, ?, ?, ?)";
