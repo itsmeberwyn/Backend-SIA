@@ -90,4 +90,61 @@ class Patch
 
         return $this->gm->response($payload, $remarks, $message, $code);
     }
+
+
+    //natad part
+    public function editUserProfile($data)
+    {
+        $payload = [];
+        $code = 404;
+        $remarks = "failed";
+        $message = "Unable to update data";
+
+        try {
+            $this->pdo->beginTransaction();
+
+            $updateUserSQL = "UPDATE users_table SET user_firstname =?, user_lastname =?, user_middlename =?, user_gender =?, user_department =?, user_yearlevel =?, user_block =?, user_email =?,  user_priviledge =?
+            WHERE user_studnum = ?;";
+            $updateUserSQL = $this->pdo->prepare($updateUserSQL);
+            $updateUserSQL->execute([$data->user_firstname, $data->user_lastname, $data->user_middlename, $data->user_gender, $data->user_department, $data->user_yearlevel, $data->user_block, $data->user_email, $data->user_priviledge, $data->user_studnum]);
+            $this->pdo->commit();
+
+            $code = 200;
+            $remarks = "success";
+            $message = "Successfully created";
+            return $this->gm->response($payload, $remarks, $message, $code);
+        } catch (\PDOException $e) {
+            $this->pdo->rollback();
+            throw $e;
+        }
+
+        return $this->gm->response($payload, $remarks, $message, $code);
+    }
+
+    public function changePassword($data)
+    {
+        $payload = [];
+        $code = 404;
+        $remarks = "failed";
+        $message = "Unable to update data";
+
+        try {
+            $this->pdo->beginTransaction();
+
+            $updateUserSQL = "UPDATE users_table SET user_password = ? WHERE user_studnum = ?;";
+            $updateUserSQL = $this->pdo->prepare($updateUserSQL);
+            $updateUserSQL->execute([$data->user_password, $data->user_studnum]);
+            $this->pdo->commit();
+
+            $code = 200;
+            $remarks = "success";
+            $message = "Successfully created";
+            return $this->gm->response($payload, $remarks, $message, $code);
+        } catch (\PDOException $e) {
+            $this->pdo->rollback();
+            throw $e;
+        }
+
+        return $this->gm->response($payload, $remarks, $message, $code);
+    }
 }

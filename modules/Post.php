@@ -254,7 +254,6 @@ class Post
         $sqlRegister = "SELECT 
            events_table.event_startdatetime , events_table.event_enddatetime, events_table.event_id,
            registration_table.event_id_r,registration_table.user_studnum_r,registration_table.registration_created_at
-
            FROM registration_table INNER JOIN events_table 
            ON registration_table.event_id_r = events_table.event_id
            WHERE user_studnum_r = '$data->user_studnum_r' ";
@@ -281,6 +280,76 @@ class Post
             // }
         } else {
             return array("data" => array("message" => "Incorrect "), "success" => false);
+        }
+    }
+
+    //natad part
+    public function userRegister($data)
+    {
+        $sql = "SELECT * FROM users_table WHERE user_email = '$data->user_email'";
+        if ($res = $this->pdo->query($sql)->fetchAll()) {
+            return array("conflict" => "Username already registered");
+        } else {
+            $sql = "INSERT INTO users_table(user_firstname, user_lastname, user_middlename, user_gender, user_department, user_yearlevel, user_block, user_email, user_password, user_priviledge) VALUES (?,?,?,?,?,?,?,?,?,?)";
+            $sql = $this->pdo->prepare($sql);
+            $sql->execute([
+                $data->user_firstname,
+                $data->user_lastname,
+                $data->user_middlename,
+                $data->user_gender,
+                $data->user_department,
+                $data->user_yearlevel,
+                $data->user_block,
+                $data->user_email,
+                $data->user_password,
+                $data->user_priviledge,
+            ]);
+
+            $count = $sql->rowCount();
+            $LAST_ID = $this->pdo->lastInsertId();
+
+            if ($count) {
+                return array(
+                    "data" => array(
+                        "id" => $LAST_ID,
+                        "firstname" => $data->user_firstname,
+                        "lastname" => $data->user_lastname,
+                        "middlename" => $data->user_middlename,
+                        "gender" => $data->user_gender,
+                        "department" => $data->user_department,
+                        "yearlevel" => $data->user_yearlevel,
+                        "block" => $data->user_block,
+                        "email" => $data->user_email,
+                        "priviledge" => $data->user_priviledge,
+                    ),
+                    "success" => true
+                );
+            } else {
+                return array("data" => array("message" => "No Record inserted"), "success" => false);
+            }
+        }
+    }
+
+    public function userLogin($data)
+    {
+        $sql = "SELECT * FROM users_table WHERE user_email = ? AND user_password = ?";
+        $sql = $this->pdo->prepare($sql);
+        $sql->execute([
+            $data->user_email,
+            $data->user_password,
+        ]);
+
+        $res = $sql->fetch(PDO::FETCH_ASSOC);
+        $count = $sql->rowCount();
+
+        if ($count) {
+            return array("data" => array(
+                "studnum" => $res['user_studnum'],
+                "firstname" => $res['user_firstname'],
+                "lastname" => $res['user_lastname'],
+            ), "success" => true);
+        } else {
+            return array("data" => array("message" => "Incorrect username or password"), "success" => false);
         }
     }
 }

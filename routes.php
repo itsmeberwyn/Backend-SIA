@@ -25,6 +25,8 @@ if (isset($_REQUEST['request'])) {
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'POST':
         $d = json_decode(file_get_contents("php://input"));
+
+
         switch ($req[0]) {
                 // news CRUD
             case 'createnews':
@@ -77,6 +79,20 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 break;
             case 'admin-login':
                 echo json_encode($post->adminLogin($d));
+                break;
+
+                //user Register
+            case 'user-register':
+                echo json_encode($post->userRegister($d));
+                break;
+            case 'user-login':
+                echo json_encode($post->userLogin($d));
+                break;
+            case 'user-edit-profile':
+                echo json_encode($patch->editUserProfile($d));
+                break;
+            case 'user-change-password':
+                echo json_encode($patch->changePassword($d));
                 break;
 
                 //Profile 

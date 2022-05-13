@@ -15,7 +15,10 @@ A system keeping an eye on stock count, and on transactions; it also stores the 
 - [@Berwyn Felismenia](https://github.com/luci-000)
 - [@John Romeo Perez](https://github.com/luci-000)
 - [@Melmark Dela Cruz](https://github.com/luci-000)
-- [@Melmark Dela Cruz](https://github.com/luci-000)
+- [@Angelica Estrada](https://github.com/luci-000)
+- [@Angelo Natad](https://github.com/luci-000)
+- [@Mark Russel Trapsi](https://github.com/luci-000)
+- [@Renzo Santos](https://github.com/luci-000)
 
 ## Run Locally
 

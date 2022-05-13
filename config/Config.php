@@ -10,6 +10,7 @@ set_time_limit(1000);
 
 require_once("./vendor/autoload.php");
 
+
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
