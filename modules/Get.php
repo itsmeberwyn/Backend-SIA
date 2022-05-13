@@ -41,16 +41,64 @@ class Get
     }
 
     //Romeo    
-    public function getEvent()
+    public function getEventToday()
     {
         $payload = [];
         $code = 404;
         $remarks = "failed";
         $message = "Unable to fetch data";
 
+        $currentDate = date('Y-m-d');
 
         try {
-            $sql = "SELECT * FROM events_table, event_details_table WHERE events_table.event_id = event_details_table.event_id_e AND event_details_table.deleted_at IS NULL";
+            $sql = "SELECT * FROM events_table, event_details_table WHERE DATE(events_table.event_startdatetime) = '$currentDate' AND events_table.event_id = event_details_table.event_id_e AND event_details_table.deleted_at IS NULL";
+            $res = $this->gm->retrieve($sql);
+            if ($res['code'] == 200) {
+                $payload = $res['data'];
+                $code = 200;
+                $remarks = "success";
+                $message = "Successfully retrieved requested records";
+            }
+            return $this->gm->response($payload, $remarks, $message, $code);
+        } catch (\PDOException $e) {
+            return $this->gm->response($payload, $remarks, $message, $code);
+        }
+    }
+    public function getEventFuture()
+    {
+        $payload = [];
+        $code = 404;
+        $remarks = "failed";
+        $message = "Unable to fetch data";
+
+        $currentDate = date('Y-m-d');
+
+        try {
+            $sql = "SELECT * FROM events_table, event_details_table WHERE DATE(events_table.event_startdatetime) > '$currentDate' AND events_table.event_id = event_details_table.event_id_e AND event_details_table.deleted_at IS NULL";
+            $res = $this->gm->retrieve($sql);
+            if ($res['code'] == 200) {
+                $payload = $res['data'];
+                $code = 200;
+                $remarks = "success";
+                $message = "Successfully retrieved requested records";
+            }
+            return $this->gm->response($payload, $remarks, $message, $code);
+        } catch (\PDOException $e) {
+            return $this->gm->response($payload, $remarks, $message, $code);
+        }
+    }
+
+    public function getEventFinished()
+    {
+        $payload = [];
+        $code = 404;
+        $remarks = "failed";
+        $message = "Unable to fetch data";
+
+        $currentDate = date('Y-m-d');
+
+        try {
+            $sql = "SELECT * FROM events_table, event_details_table WHERE DATE(events_table.event_startdatetime) < '$currentDate' AND events_table.event_id = event_details_table.event_id_e AND event_details_table.deleted_at IS NULL";
             $res = $this->gm->retrieve($sql);
             if ($res['code'] == 200) {
                 $payload = $res['data'];
