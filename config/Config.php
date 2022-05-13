@@ -8,7 +8,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 date_default_timezone_set("Asia/Manila");
 set_time_limit(1000);
 
-require_once("../vendor/autoload.php");
+require_once("./vendor/autoload.php");
 
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);

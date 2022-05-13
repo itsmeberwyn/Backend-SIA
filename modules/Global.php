@@ -8,6 +8,26 @@ class GlobalMethods
         $this->pdo = $pdo;
     }
 
+    public function uploadImage($dir, $file)
+    {
+        // return ['data' => $dir, 'file' => $file];
+
+        if (sizeof($file) != 0) {
+
+            $target_dir = 'upload/' . $dir . '/';
+
+            $imageFileType = strtolower(pathinfo($file['image']['name'], PATHINFO_EXTENSION));
+            $filename = time() . '.' . $imageFileType;
+            $target_file = $target_dir .  $filename;
+
+            move_uploaded_file($file['image']['tmp_name'], $target_file);
+
+            return ['filename' => $filename, 'targetpath' => $target_file, 'status' => 'success'];
+        } else {
+            return ['message' => 'something went wrong', 'status' => 'error'];
+        }
+    }
+
     public function retrieve($sql)
     {
         $data = array();
