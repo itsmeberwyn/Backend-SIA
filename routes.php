@@ -48,8 +48,14 @@ switch ($_SERVER['REQUEST_METHOD']) {
             case 'createevent':
                 echo json_encode($post->createEvent($_POST));
                 break;
-            case 'getevent':
-                echo json_encode($get->getEvent());
+            case 'geteventtoday':
+                echo json_encode($get->getEventToday());
+                break;
+            case 'geteventfuture':
+                echo json_encode($get->getEventFuture());
+                break;
+            case 'geteventfinished':
+                echo json_encode($get->getEventFinished());
                 break;
             case 'updateevent':
                 echo json_encode($patch->updateEvent($_POST));
