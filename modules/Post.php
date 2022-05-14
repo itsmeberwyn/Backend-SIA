@@ -41,9 +41,9 @@ class Post
             $studentsSQL->execute([$newsInfo->news_title, $newsInfo->news_description]);
             $LAST_ID = $this->pdo->lastInsertId();
 
-            $newsDetailSQL = "INSERT INTO news_details_table(news_id_n, news_details_image, news_details_organizer, news_details_category) VALUES (?, ?, ?, ?)";
+            $newsDetailSQL = "INSERT INTO news_details_table(news_id_n, news_details_image, news_details_organizer, news_details_type, news_details_category) VALUES (?, ?, ?, ?, ?)";
             $newsDetailSQL = $this->pdo->prepare($newsDetailSQL);
-            $newsDetailSQL->execute([$LAST_ID, $newsDetails->news_details_image, $newsDetails->news_details_organizer, $newsDetails->news_details_category]);
+            $newsDetailSQL->execute([$LAST_ID, $newsDetails->news_details_image, $newsDetails->news_details_organizer, $newsDetails->news_details_type, $newsDetails->news_details_category]);
 
             $payload = ['newsInfo' => $newsInfo, 'newsDetails' => $newsDetails];
 
