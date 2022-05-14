@@ -344,9 +344,14 @@ class Post
 
         if ($count) {
             return array("data" => array(
-                "studnum" => $res['user_studnum'],
-                "firstname" => $res['user_firstname'],
-                "lastname" => $res['user_lastname'],
+                "user_studnum" => $res['user_studnum'],
+                "user_firstName" => $res['user_firstname'],
+                "user_lastName" => $res['user_lastname'],
+                "user_middleName" => $res['user_middlename'],
+                "user_gender" => $res['user_gender'],
+                "user_department" => $res['user_department'],
+                "user_yearlevel" => $res['user_yearlevel'],
+                "user_block" => $res['user_block']
             ), "success" => true);
         } else {
             return array("data" => array("message" => "Incorrect username or password"), "success" => false);

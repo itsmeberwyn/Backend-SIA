@@ -103,12 +103,13 @@ class Patch
         try {
             $this->pdo->beginTransaction();
 
-            $updateUserSQL = "UPDATE users_table SET user_firstname =?, user_lastname =?, user_middlename =?, user_gender =?, user_department =?, user_yearlevel =?, user_block =?, user_email =?,  user_priviledge =?
+            $updateUserSQL = "UPDATE users_table SET user_firstname =?, user_lastname =?, user_middlename =?, user_gender =?, user_department =?, user_yearlevel =?, user_block =?
             WHERE user_studnum = ?;";
             $updateUserSQL = $this->pdo->prepare($updateUserSQL);
-            $updateUserSQL->execute([$data->user_firstname, $data->user_lastname, $data->user_middlename, $data->user_gender, $data->user_department, $data->user_yearlevel, $data->user_block, $data->user_email, $data->user_priviledge, $data->user_studnum]);
+            $updateUserSQL->execute([$data->user_firstName, $data->user_lastName, $data->user_middleName, $data->user_gender, $data->user_department, $data->user_yearlevel, $data->user_block, $data->user_studnum]);
             $this->pdo->commit();
 
+            $payload = $data;
             $code = 200;
             $remarks = "success";
             $message = "Successfully created";
