@@ -109,6 +109,14 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($get->adminEventHistory($d));
                 break;
 
+                //student list -> mel
+            case 'get-student':
+                echo json_encode($get->getStudent($d));
+                break;
+            case 'assignStudent':
+                echo json_encode($patch->assignStudent($d));
+                break;
+
             default:
                 echo errmsg(400);
                 break;

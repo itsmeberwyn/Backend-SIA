@@ -148,4 +148,34 @@ class Patch
 
         return $this->gm->response($payload, $remarks, $message, $code);
     }
+
+    //assign student
+    public function assignStudent($data)
+    {
+        $payload = [];
+        $code = 404;
+        $remarks = "failed";
+        $message = "Unable to update data";
+
+        try {
+            $this->pdo->beginTransaction();
+
+            $updateUserSQL = "UPDATE users_table SET user_priviledge = ? 
+            WHERE user_studnum = ?;";
+            $updateUserSQL = $this->pdo->prepare($updateUserSQL);
+            $updateUserSQL->execute([$data->user_priviledge, $data->user_studnum]);
+            $this->pdo->commit();
+
+            $payload = $data;
+            $code = 200;
+            $remarks = "success";
+            $message = "Successfully created";
+            return $this->gm->response($payload, $remarks, $message, $code);
+        } catch (\PDOException $e) {
+            $this->pdo->rollback();
+            throw $e;
+        }
+
+        return $this->gm->response($payload, $remarks, $message, $code);
+    }
 }

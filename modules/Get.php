@@ -120,7 +120,7 @@ class Get
         $message = "Unable to fetch data";
 
         try {
-            $sql = "SELECT registration_table.*, users_table.user_studnum, users_table.user_firstname, users_table.user_lastname, users_table.user_middlename, users_table.user_email, events_table.*, event_details_table.* FROM registration_table INNER JOIN users_table ON registration_table.user_studnum_r=users_table.user_studnum INNER JOIN events_table ON registration_table.event_id_r=events_table.event_id INNER JOIN event_details_table ON registration_table.event_id_r=event_details_table.event_id_e WHERE users_table.user_studnum = $data AND event_details_table.deleted_at IS NULL AND registration_table.cancelled_at IS NULL";
+            $sql = "SELECT registration_table.*, users_table.user_studnum, users_table.user_department, users_table.user_block, users_table.user_firstname, users_table.user_lastname, users_table.user_middlename, users_table.user_email, events_table.*, event_details_table.* FROM registration_table INNER JOIN users_table ON registration_table.user_studnum_r=users_table.user_studnum INNER JOIN events_table ON registration_table.event_id_r=events_table.event_id INNER JOIN event_details_table ON registration_table.event_id_r=event_details_table.event_id_e WHERE users_table.user_studnum = $data->event_id AND event_details_table.deleted_at IS NULL AND registration_table.cancelled_at IS NULL";
 
             $res = $this->gm->retrieve($sql);
 
@@ -146,6 +146,31 @@ class Get
 
         try {
             $sql = "SELECT * FROM events_table ";
+            $res = $this->gm->retrieve($sql);
+
+            if ($res['code'] == 200) {
+                $payload = $res['data'];
+                $code = 200;
+                $remarks = "success";
+                $message = "Successfully retrieved requested records";
+            }
+            return $this->gm->response($payload, $remarks, $message, $code);
+        } catch (\PDOException $e) {
+            return $this->gm->response($payload, $remarks, $message, $code);
+        }
+    }
+
+    //mel mark pogi
+    public function getStudent()
+    {
+
+        $payload = [];
+        $code = 404;
+        $remarks = "failed";
+        $message = "Unable to save data";
+
+        try {
+            $sql = "SELECT * FROM users_table ";
             $res = $this->gm->retrieve($sql);
 
             if ($res['code'] == 200) {

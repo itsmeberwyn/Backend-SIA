@@ -116,6 +116,7 @@ class Post
                 "studnum" => $res['admin_id'],
                 "firstname" => $res['admin_firstname'],
                 "lastname" => $res['admin_lastname'],
+                "role" => $res['role'],
             ), "success" => true);
         } else {
             return array("data" => array("message" => "Incorrect username or password"), "success" => false);
@@ -290,7 +291,7 @@ class Post
         if ($res = $this->pdo->query($sql)->fetchAll()) {
             return array("conflict" => "Username already registered");
         } else {
-            $sql = "INSERT INTO users_table(user_firstname, user_lastname, user_middlename, user_gender, user_department, user_yearlevel, user_block, user_email, user_password, user_priviledge) VALUES (?,?,?,?,?,?,?,?,?,?)";
+            $sql = "INSERT INTO users_table(user_firstname, user_lastname, user_middlename, user_gender, user_department, user_yearlevel, user_block, user_email, user_password, role, user_priviledge) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
             $sql = $this->pdo->prepare($sql);
             $sql->execute([
                 $data->user_firstname,
@@ -302,6 +303,7 @@ class Post
                 $data->user_block,
                 $data->user_email,
                 $data->user_password,
+                $data->role,
                 $data->user_priviledge,
             ]);
 
@@ -351,7 +353,9 @@ class Post
                 "user_gender" => $res['user_gender'],
                 "user_department" => $res['user_department'],
                 "user_yearlevel" => $res['user_yearlevel'],
-                "user_block" => $res['user_block']
+                "user_block" => $res['user_block'],
+                "privilege" => $res['user_priviledge'],
+                "role" => $res['role']
             ), "success" => true);
         } else {
             return array("data" => array("message" => "Incorrect username or password"), "success" => false);
