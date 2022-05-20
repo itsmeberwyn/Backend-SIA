@@ -7,6 +7,7 @@ require_once("./modules/Post.php");
 require_once("./modules/Patch.php");
 require_once("./modules/Remove.php");
 require_once("./modules/AdminAuth.php");
+require_once("./modules/StudentAuth.php");
 
 
 $db = new Connection();
@@ -16,6 +17,7 @@ $post = new Post($pdo);
 $patch = new Patch($pdo);
 $remove = new Remove($pdo);
 $adminAuth = new Adminauth($pdo);
+$studentAuth = new Studentauth($pdo);
 
 
 if (isset($_REQUEST['request'])) {
@@ -118,14 +120,21 @@ switch ($_SERVER['REQUEST_METHOD']) {
             }
         }
         switch ($req[0]) {
-            case 'refreshtoken':
-                echo json_encode($adminAuth->refreshToken($d));
+            case 'studentrefreshtoken':
+                echo json_encode($studentAuth->refreshToken($d));
                 break;
             case 'user-register':
-                echo json_encode($post->userRegister($d));
+                echo json_encode($studentAuth->userRegister($d));
                 break;
             case 'user-login':
-                echo json_encode($post->userLogin($d));
+                echo json_encode($studentAuth->userLogin($d));
+                break;
+            case 'student-logout':
+                echo json_encode($studentAuth->logout($d));
+                break;
+
+            case 'refreshtoken':
+                echo json_encode($adminAuth->refreshToken($d));
                 break;
             case 'admin-register':
                 echo json_encode($adminAuth->adminRegister($d));
@@ -136,6 +145,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             case 'admin-logout':
                 echo json_encode($adminAuth->logout($d));
                 break;
+
             default:
                 echo errmsg(401);
                 break;

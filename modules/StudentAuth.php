@@ -1,6 +1,5 @@
 <?php
-
-class Adminauth
+class Studentauth
 {
     protected $pdo;
 
@@ -9,22 +8,26 @@ class Adminauth
         $this->pdo = $pdo;
     }
 
-    public function adminRegister($data)
+    public function userRegister($data)
     {
-        $sql = "SELECT * FROM admins_table WHERE admin_email = '$data->admin_email'";
+        $sql = "SELECT * FROM users_table WHERE user_email = '$data->user_email'";
         if ($res = $this->pdo->query($sql)->fetchAll()) {
             return array("conflict" => "Username already registered");
         } else {
-            $sql = "INSERT INTO admins_table(admin_firstname, admin_lastname, admin_middlename, admin_gender, admin_email, role, password) VALUES (?,?,?,?,?,?,?)";
+            $sql = "INSERT INTO users_table(user_firstname, user_lastname, user_middlename, user_gender, user_department, user_yearlevel, user_block, user_email, user_password, role, user_priviledge) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
             $sql = $this->pdo->prepare($sql);
             $sql->execute([
-                $data->admin_firstname,
-                $data->admin_lastname,
-                $data->admin_middlename,
-                $data->admin_gender,
-                $data->admin_email,
-                'admin',
-                password_hash($data->admin_password, PASSWORD_DEFAULT),
+                $data->user_firstname,
+                $data->user_lastname,
+                $data->user_middlename,
+                $data->user_gender,
+                $data->user_department,
+                $data->user_yearlevel,
+                $data->user_block,
+                $data->user_email,
+                password_hash($data->user_password, PASSWORD_DEFAULT),
+                $data->role,
+                $data->user_priviledge,
             ]);
 
             $count = $sql->rowCount();
@@ -34,11 +37,15 @@ class Adminauth
                 return array(
                     "data" => array(
                         "id" => $LAST_ID,
-                        "firstname" => $data->admin_firstname,
-                        "lastname" => $data->admin_lastname,
-                        "lastname" => $data->admin_middlename,
-                        "lastname" => $data->admin_gender,
-                        "email" => $data->admin_email,
+                        "firstname" => $data->user_firstname,
+                        "lastname" => $data->user_lastname,
+                        "middlename" => $data->user_middlename,
+                        "gender" => $data->user_gender,
+                        "department" => $data->user_department,
+                        "yearlevel" => $data->user_yearlevel,
+                        "block" => $data->user_block,
+                        "email" => $data->user_email,
+                        "priviledge" => $data->user_priviledge,
                     ),
                     "success" => true
                 );
@@ -48,29 +55,31 @@ class Adminauth
         }
     }
 
-    public function adminLogin($data)
+
+    public function userLogin($data)
     {
-        $sql = "SELECT * FROM admins_table WHERE admin_email = ? LIMIT 1";
+        $sql = "SELECT * FROM users_table WHERE user_email = ? LIMIT 1";
         $sql = $this->pdo->prepare($sql);
         $sql->execute([
-            $data->admin_email,
+            $data->user_email,
         ]);
 
         $res = $sql->fetch(PDO::FETCH_ASSOC);
+        $count = $sql->rowCount();
 
-        if (password_verify($data->admin_password, $res['password'])) {
+        if (password_verify($data->user_password, $res['user_password'])) {
             $refreshToken = generateRandomString();
 
-            $sql = "INSERT INTO admin_refresh_tokens (adminid, token, expires_at) VALUES (?, ?, ?)";
+            $sql = "INSERT INTO student_refresh_tokens (studentid, token, expires_at) VALUES (?, ?, ?)";
             $sql = $this->pdo->prepare($sql);
             $sql->execute([
-                $res['admin_id'],
+                $res['user_studnum'],
                 $refreshToken,
                 (time() + 600),
             ]);
 
             $headers = array('alg' => 'HS256', 'typ' => 'JWT');
-            $payload = array('sub' => '1234567890', 'name' => $res['admin_firstname'], 'adminid' => $res['admin_id'], 'admin' => true, 'exp' => (time() + 60));
+            $payload = array('sub' => '1234567890', 'name' => $res['user_firstname'], 'studentid' => $res['user_studnum'], 'admin' => false, 'exp' => (time() + 60));
 
             $jwt = generate_jwt($headers, $payload);
 
@@ -85,10 +94,16 @@ class Adminauth
             setcookie("refreshtoken", $refreshToken, $cookie_options);
 
             return array("data" => array(
-                "adminid" => $res['admin_id'],
-                "firstname" => $res['admin_firstname'],
-                "lastname" => $res['admin_lastname'],
-                "role" => $res['role'],
+                "user_studnum" => $res['user_studnum'],
+                "user_firstName" => $res['user_firstname'],
+                "user_lastName" => $res['user_lastname'],
+                "user_middleName" => $res['user_middlename'],
+                "user_gender" => $res['user_gender'],
+                "user_department" => $res['user_department'],
+                "user_yearlevel" => $res['user_yearlevel'],
+                "user_block" => $res['user_block'],
+                "privilege" => $res['user_priviledge'],
+                "role" => $res['role']
             ), "success" => true, "accesstoken" => $jwt);
         } else {
             return array("data" => array("message" => "Incorrect username or password"), "success" => false);
@@ -100,7 +115,7 @@ class Adminauth
         if (isset($_COOKIE['refreshtoken'])) {
             $refreshToken = $_COOKIE['refreshtoken'];
 
-            $sql = "SELECT admin_refresh_tokens.*, admins_table.admin_firstname, admins_table.admin_id FROM admin_refresh_tokens, admins_table WHERE token=? AND admins_table.admin_id = admin_refresh_tokens.adminid LIMIT 1";
+            $sql = "SELECT student_refresh_tokens.*, users_table.user_firstname, users_table.user_studnum FROM student_refresh_tokens, users_table WHERE token=? AND users_table.user_studnum = student_refresh_tokens.studentid LIMIT 1";
             $sql = $this->pdo->prepare($sql);
             $sql->execute([
                 $refreshToken,
@@ -108,10 +123,9 @@ class Adminauth
 
             $res = $sql->fetch(PDO::FETCH_ASSOC);
 
-
             if ($res) {
                 $headers = array('alg' => 'HS256', 'typ' => 'JWT');
-                $payload = array('sub' => '1234567890', 'name' => $res['admin_firstname'], 'adminid' => $res['admin_id'], 'admin' => true, 'exp' => (time() + 60));
+                $payload = array('sub' => '1234567890', 'name' => $res['user_firstname'], 'studentid' => $res['user_studnum'], 'admin' => false, 'exp' => (time() + 60));
 
                 $jwt = generate_jwt($headers, $payload);
 
@@ -133,10 +147,10 @@ class Adminauth
         if (isset($_COOKIE['refreshtoken'])) {
             $refreshToken = $_COOKIE['refreshtoken'];
 
-            $sql = "DELETE FROM admin_refresh_tokens WHERE adminid=? AND token=?";
+            $sql = "DELETE FROM student_refresh_tokens WHERE studentid=? AND token=?";
             $sql = $this->pdo->prepare($sql);
             $sql->execute([
-                $data->adminid,
+                $data->studentid,
                 $refreshToken,
             ]);
             $count = $sql->rowCount();
