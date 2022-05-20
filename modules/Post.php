@@ -61,43 +61,7 @@ class Post
         return $this->gm->response($payload, $remarks, $message, $code);
     }
 
-    public function adminRegister($data)
-    {
-        $sql = "SELECT * FROM admins_table WHERE admin_email = '$data->admin_email'";
-        if ($res = $this->pdo->query($sql)->fetchAll()) {
-            return array("conflict" => "Username already registered");
-        } else {
-            $sql = "INSERT INTO admins_table(admin_firstname, admin_lastname, admin_middlename, admin_gender, admin_email, password) VALUES (?,?,?,?,?,?)";
-            $sql = $this->pdo->prepare($sql);
-            $sql->execute([
-                $data->admin_firstname,
-                $data->admin_lastname,
-                $data->admin_middlename,
-                $data->admin_gender,
-                $data->admin_email,
-                $data->admin_password,
-            ]);
 
-            $count = $sql->rowCount();
-            $LAST_ID = $this->pdo->lastInsertId();
-
-            if ($count) {
-                return array(
-                    "data" => array(
-                        "id" => $LAST_ID,
-                        "firstname" => $data->admin_firstname,
-                        "lastname" => $data->admin_lastname,
-                        "lastname" => $data->admin_middlename,
-                        "lastname" => $data->admin_gender,
-                        "email" => $data->admin_email,
-                    ),
-                    "success" => true
-                );
-            } else {
-                return array("data" => array("message" => "No Record inserted"), "success" => false);
-            }
-        }
-    }
 
     public function adminLogin($data)
     {

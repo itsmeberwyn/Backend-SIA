@@ -1,5 +1,6 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=utf-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
@@ -19,6 +20,7 @@ define("DBASE", $_ENV['__DBASE_']);
 define("USER", $_ENV['__USER_']);
 define("PASSWORD", $_ENV['__PASSWORD_']);
 define("CHARSET", $_ENV['__CHARSET_']);
+define('SECRET', $_ENV['__SECRET_']);
 
 class Connection
 {
