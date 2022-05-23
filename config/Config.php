@@ -21,6 +21,7 @@ define("USER", $_ENV['__USER_']);
 define("PASSWORD", $_ENV['__PASSWORD_']);
 define("CHARSET", $_ENV['__CHARSET_']);
 define('SECRET', $_ENV['__SECRET_']);
+define('SENDGRID_API_KEY', '');
 
 class Connection
 {

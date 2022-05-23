@@ -1,12 +1,16 @@
 <?php
+
+
 class Post
 {
-    protected $pdo, $gm;
+    protected $pdo, $gm, $sendEmail;
+
 
     public function __construct(\PDO $pdo)
     {
         $this->gm = new GlobalMethods($pdo);
         $this->pdo = $pdo;
+        $this->sendEmail = new SendEmail();
     }
 
     public function testPost($data)
@@ -117,6 +121,8 @@ class Post
             $code = 200;
             $remarks = "success";
             $message = "Successfully created";
+            $this->sendEmail->send($data->user_email, $data->eventlink);
+
             return $this->gm->response($payload, $remarks, $message, $code);
         } catch (\PDOException $e) {
             return $this->gm->response($payload, $remarks, $message, $code);

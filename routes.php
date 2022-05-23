@@ -8,10 +8,13 @@ require_once("./modules/Patch.php");
 require_once("./modules/Remove.php");
 require_once("./modules/AdminAuth.php");
 require_once("./modules/StudentAuth.php");
+require_once("./modules/SendEmail.php");
 
 
 $db = new Connection();
 $pdo = $db->connect();
+
+
 $get = new Get($pdo);
 $post = new Post($pdo);
 $patch = new Patch($pdo);

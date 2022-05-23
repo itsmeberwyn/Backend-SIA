@@ -102,6 +102,7 @@ class Studentauth
                 "user_department" => $res['user_department'],
                 "user_yearlevel" => $res['user_yearlevel'],
                 "user_block" => $res['user_block'],
+                "user_email" => $res['user_email'],
                 "privilege" => $res['user_priviledge'],
                 "role" => $res['role']
             ), "success" => true, "accesstoken" => $jwt);
