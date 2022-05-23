@@ -75,6 +75,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     case 'userevent':
                         echo json_encode($get->getUserEvent($d));
                         break;
+                    case 'getUserfinishedevent':
+                        echo json_encode($get->getUserFinishedEvent($d));
+                        break;
                     case 'cancelregistration':
                         echo json_encode($remove->cancelRegistration($d));
                         break;
