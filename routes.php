@@ -58,13 +58,13 @@ switch ($_SERVER['REQUEST_METHOD']) {
                         echo json_encode($post->createEvent($_POST));
                         break;
                     case 'geteventtoday':
-                        echo json_encode($get->getEventToday());
+                        echo json_encode($get->getEventToday($d));
                         break;
                     case 'geteventfuture':
-                        echo json_encode($get->getEventFuture());
+                        echo json_encode($get->getEventFuture($d));
                         break;
                     case 'geteventfinished':
-                        echo json_encode($get->getEventFinished());
+                        echo json_encode($get->getEventFinished($d));
                         break;
                     case 'updateevent':
                         echo json_encode($patch->updateEvent($_POST));
@@ -74,6 +74,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
                         break;
                     case 'joinevent':
                         echo json_encode($post->joinEvent($d));
+                        break;
+                    case 'isjoined':
+                        echo json_encode($get->isJoined($d));
                         break;
                     case 'userevent':
                         echo json_encode($get->getUserEvent($d));

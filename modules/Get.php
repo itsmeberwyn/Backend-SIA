@@ -41,31 +41,12 @@ class Get
     }
 
     //Romeo    
-    public function getEventToday()
+    public function getEventToday($data)
     {
-        $payload = [];
-        $code = 404;
-        $remarks = "failed";
-        $message = "Unable to fetch data";
-
-        $currentDate = date('Y-m-d');
-
-        try {
-            $sql = "SELECT * FROM events_table, event_details_table WHERE DATE(events_table.event_startdatetime) = '$currentDate' AND events_table.event_id = event_details_table.event_id_e AND event_details_table.deleted_at IS NULL";
-            $res = $this->gm->retrieve($sql);
-            if ($res['code'] == 200) {
-                $payload = $res['data'];
-                $code = 200;
-                $remarks = "success";
-                $message = "Successfully retrieved requested records";
-            }
-            return $this->gm->response($payload, $remarks, $message, $code);
-        } catch (\PDOException $e) {
-            return $this->gm->response($payload, $remarks, $message, $code);
+        $withCategory = true;
+        if ($data === '') {
+            $withCategory = false;
         }
-    }
-    public function getEventFuture()
-    {
         $payload = [];
         $code = 404;
         $remarks = "failed";
@@ -74,7 +55,11 @@ class Get
         $currentDate = date('Y-m-d');
 
         try {
-            $sql = "SELECT * FROM events_table, event_details_table WHERE DATE(events_table.event_startdatetime) > '$currentDate' AND events_table.event_id = event_details_table.event_id_e AND event_details_table.deleted_at IS NULL";
+            if ($withCategory) {
+                $sql = "SELECT * FROM events_table, event_details_table WHERE DATE(events_table.event_startdatetime) = '$currentDate' AND events_table.event_id = event_details_table.event_id_e AND event_details_table.deleted_at IS NULL AND event_details_table.event_detail_category = '$data->category'";
+            } else {
+                $sql = "SELECT * FROM events_table, event_details_table WHERE DATE(events_table.event_startdatetime) = '$currentDate' AND events_table.event_id = event_details_table.event_id_e AND event_details_table.deleted_at IS NULL";
+            }
             $res = $this->gm->retrieve($sql);
             if ($res['code'] == 200) {
                 $payload = $res['data'];
@@ -88,8 +73,12 @@ class Get
         }
     }
 
-    public function getEventFinished()
+    public function getEventFuture($data)
     {
+        $withCategory = true;
+        if ($data === '') {
+            $withCategory = false;
+        }
         $payload = [];
         $code = 404;
         $remarks = "failed";
@@ -98,7 +87,11 @@ class Get
         $currentDate = date('Y-m-d');
 
         try {
-            $sql = "SELECT * FROM events_table, event_details_table WHERE DATE(events_table.event_startdatetime) < '$currentDate' AND events_table.event_id = event_details_table.event_id_e AND event_details_table.deleted_at IS NULL";
+            if ($withCategory) {
+                $sql = "SELECT * FROM events_table, event_details_table WHERE DATE(events_table.event_startdatetime) > '$currentDate' AND events_table.event_id = event_details_table.event_id_e AND event_details_table.deleted_at IS NULL AND event_details_table.event_detail_category = '$data->category'";
+            } else {
+                $sql = "SELECT * FROM events_table, event_details_table WHERE DATE(events_table.event_startdatetime) > '$currentDate' AND events_table.event_id = event_details_table.event_id_e AND event_details_table.deleted_at IS NULL";
+            }
             $res = $this->gm->retrieve($sql);
             if ($res['code'] == 200) {
                 $payload = $res['data'];
@@ -110,6 +103,64 @@ class Get
         } catch (\PDOException $e) {
             return $this->gm->response($payload, $remarks, $message, $code);
         }
+    }
+
+    public function getEventFinished($data)
+    {
+        $withCategory = true;
+        if ($data === '') {
+            $withCategory = false;
+        }
+
+        $payload = [];
+        $code = 404;
+        $remarks = "failed";
+        $message = "Unable to fetch data";
+
+        $currentDate = date('Y-m-d');
+
+        try {
+            if ($withCategory) {
+                $sql = "SELECT * FROM events_table, event_details_table WHERE DATE(events_table.event_startdatetime) < '$currentDate' AND events_table.event_id = event_details_table.event_id_e AND event_details_table.deleted_at IS NULL AND event_details_table.event_detail_category = '$data->category'";
+            } else {
+                $sql = "SELECT * FROM events_table, event_details_table WHERE DATE(events_table.event_startdatetime) < '$currentDate' AND events_table.event_id = event_details_table.event_id_e AND event_details_table.deleted_at IS NULL";
+            }
+            $res = $this->gm->retrieve($sql);
+            if ($res['code'] == 200) {
+                $payload = $res['data'];
+                $code = 200;
+                $remarks = "success";
+                $message = "Successfully retrieved requested records";
+            }
+            return $this->gm->response($payload, $remarks, $message, $code);
+        } catch (\PDOException $e) {
+            return $this->gm->response($payload, $remarks, $message, $code);
+        }
+    }
+
+    public function isJoined($data)
+    {
+        $payload = [];
+        $code = 203;
+        $remarks = "failed";
+        $message = "Unable to fetch data";
+
+        $sql = "SELECT * FROM registration_table WHERE event_id_r = ? AND user_studnum_r = ? AND cancelled_at IS NULL";
+        $sql = $this->pdo->prepare($sql);
+        $sql->execute([
+            $data->event_id,
+            $data->student_num,
+        ]);
+
+        $count = $sql->rowCount();
+
+        if ($count) {
+            $code = 200;
+            $remarks = "success";
+            $message = "Found!";
+            $payload = ["data" => $count];
+        }
+        return $this->gm->response($payload, $remarks, $message, $code);
     }
 
     public function getUserEvent($data)

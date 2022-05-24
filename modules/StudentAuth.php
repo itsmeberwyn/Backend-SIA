@@ -84,7 +84,7 @@ class Studentauth
             $jwt = generate_jwt($headers, $payload);
 
             $cookie_options = array(
-                'expires' => time() + 600,
+                'expires' => time() + 3600,
                 'path' => '/',
                 'httponly' => true,
                 'secure' => true, // or false

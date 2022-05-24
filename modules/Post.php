@@ -121,7 +121,7 @@ class Post
             $code = 200;
             $remarks = "success";
             $message = "Successfully created";
-            $this->sendEmail->send($data->user_email, $data->eventlink);
+            // $this->sendEmail->send($data->user_email, $data->eventlink);
 
             return $this->gm->response($payload, $remarks, $message, $code);
         } catch (\PDOException $e) {
