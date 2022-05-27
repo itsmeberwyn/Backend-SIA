@@ -14,15 +14,17 @@ class Studentauth
         if ($res = $this->pdo->query($sql)->fetchAll()) {
             return array("conflict" => "Username already registered");
         } else {
-            $sql = "INSERT INTO users_table(user_firstname, user_lastname, user_middlename, user_gender, user_department, user_yearlevel, user_block, user_email, user_password, role, user_priviledge) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+            $sql = "INSERT INTO users_table(user_studnum, user_firstname, user_lastname, user_middlename, user_gender, user_department, user_yearlevel, user_course, user_block, user_email, user_password, role, user_priviledge) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
             $sql = $this->pdo->prepare($sql);
             $sql->execute([
+                $data->user_studnum,
                 $data->user_firstname,
                 $data->user_lastname,
                 $data->user_middlename,
                 $data->user_gender,
                 $data->user_department,
                 $data->user_yearlevel,
+                $data->user_course,
                 $data->user_block,
                 $data->user_email,
                 password_hash($data->user_password, PASSWORD_DEFAULT),
@@ -31,12 +33,11 @@ class Studentauth
             ]);
 
             $count = $sql->rowCount();
-            $LAST_ID = $this->pdo->lastInsertId();
 
             if ($count) {
                 return array(
                     "data" => array(
-                        "id" => $LAST_ID,
+                        "id" => $data->user_studnum,
                         "firstname" => $data->user_firstname,
                         "lastname" => $data->user_lastname,
                         "middlename" => $data->user_middlename,
@@ -100,6 +101,7 @@ class Studentauth
                 "user_middleName" => $res['user_middlename'],
                 "user_gender" => $res['user_gender'],
                 "user_department" => $res['user_department'],
+                "user_course" => $res['user_course'],
                 "user_yearlevel" => $res['user_yearlevel'],
                 "user_block" => $res['user_block'],
                 "user_email" => $res['user_email'],

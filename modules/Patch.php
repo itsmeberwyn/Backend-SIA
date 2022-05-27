@@ -134,9 +134,11 @@ class Patch
         try {
             $this->pdo->beginTransaction();
 
-            $updateUserSQL = "UPDATE users_table SET user_password = ? WHERE user_studnum = ?;";
+            $updateUserSQL = "UPDATE users_table SET user_password = ? WHERE user_studnum = ?";
             $updateUserSQL = $this->pdo->prepare($updateUserSQL);
-            $updateUserSQL->execute([$data->user_password, $data->user_studnum]);
+            $updateUserSQL->execute([
+                password_hash($data->user_password, PASSWORD_DEFAULT), $data->user_studnum
+            ]);
             $this->pdo->commit();
 
             $code = 200;
