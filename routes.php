@@ -116,6 +116,33 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     case 'assignStudent':
                         echo json_encode($patch->assignStudent($d));
                         break;
+                    case 'unassignStudent':
+                        echo json_encode($patch->unassignStudent($d));
+                        break;
+                    case 'getstudentbycourse':
+                        echo json_encode($get->getStudentByCourse($d));
+                        break;
+                    case 'getstudentbydepartment':
+                        echo json_encode($get->getStudentByDepartment($d));
+                        break;
+                    case 'getpriviledestudent':
+                        echo json_encode($get->getPriviledeStudent());
+                        break;
+                    case 'getpriviledestudentbydepartment':
+                        echo json_encode($get->getPriviledeStudentByDepartment($d));
+                        break;
+                    case 'getpriviledestudentByCourse':
+                        echo json_encode($get->getPriviledeStudentByCourse($d));
+                        break;
+                    case 'searchStudent':
+                        echo json_encode($get->searchStudent($d));
+                        break;
+                    case 'checkparticipants':
+                        echo json_encode($get->checkParticipants($d));
+                        break;
+                    case 'participantsList':
+                        echo json_encode($get->participantsList($d));
+                        break;
 
                     default:
                         header("HTTP/1.1 200 OK");
